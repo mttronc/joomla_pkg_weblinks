@@ -21,6 +21,18 @@ JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_weblinks/models', 'We
  */
 class ModWeblinksHelper
 {
+	public static function getSubCategories(&$params)
+	{
+		$id	= (int) $params->get('catid', 0);
+		// Get category and all its children in a JCategoryNode object
+		$cat = JCategories::getInstance('Weblinks')->get($id);
+		// Get array with children (true for recursive)
+		$subcats = $cat->getChildren(true);
+		$cats = array($cat);
+		$cats = array_merge($cats, $subcats);
+		return $cats;
+	}
+
 	/**
 	 * Show online member names
 	 *
@@ -30,7 +42,7 @@ class ModWeblinksHelper
 	 *
 	 * @since   1.5
 	 **/
-	public static function getList(&$params)
+	public static function getList(&$params, $catid = 0)
 	{
 		// Get an instance of the generic articles model
 		$model = JModelLegacy::getInstance('Category', 'WeblinksModel', array('ignore_request' => true));
@@ -55,7 +67,7 @@ class ModWeblinksHelper
 		$model->setState('list.ordering', $ordering == 'order' ? 'ordering' : $ordering);
 		$model->setState('list.direction', $params->get('direction', 'asc'));
 
-		$catid	= (int) $params->get('catid', 0);
+		$catid	= (int) $catid;
 		$model->setState('category.id', $catid);
 
 		// Create query object

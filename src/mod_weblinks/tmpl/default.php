@@ -8,10 +8,13 @@
  */
 
 defined('_JEXEC') or die;
+
+foreach ($cats as $cat) :
+	echo '<h1>'. $cat->title .'</h1>';
 ?>
 <ul class="weblinks<?php echo $moduleclass_sfx; ?>">
 	<?php
-	foreach ($list as $item) :
+	foreach ($list[$cat->id] as $item) :
 		?>
 		<li>
 			<?php
@@ -53,3 +56,5 @@ defined('_JEXEC') or die;
 	endforeach;
 	?>
 </ul>
+<?php
+endforeach;

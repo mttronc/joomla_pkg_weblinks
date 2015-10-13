@@ -12,7 +12,14 @@ defined('_JEXEC') or die;
 // Include the weblinks functions only once
 require_once __DIR__ . '/helper.php';
 
-$list = ModWeblinksHelper::getList($params);
+$cats = ModWeblinksHelper::getSubCategories($params);
+foreach ($cats as $key => $cat)
+{
+	$list[$cat->id] = ModWeblinksHelper::getList($params, $cat->id);
+	// remove empty categories from array
+	if (!$list[$cat->id])
+		unset($cats[$key]);
+}
 
 if (!count($list))
 {
